@@ -50,6 +50,29 @@ export default new Vuex.Store({
           'success'
         ).then(() => location.reload())
       })
+    },
+    logout (context) {
+      swal({
+        title: 'Are you sure?',
+        text: 'You will logout from this site',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Logout'
+      }).then((result) => {
+        if (result.value) {
+          swal(
+            'Logout!',
+            'You are logged out',
+            'success'
+          ).then(() => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('id')
+            location.reload()
+          })
+        }
+      })
     }
   }
 })

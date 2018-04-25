@@ -7,7 +7,9 @@
             {{question.title}}
           </h4>
           <div class="col-3">
-            {{question.votes.length}} <i class="fas fa-thumbs-up"></i>
+            <button class="btn btn-info" @click="vote(question._id)"><i class="fas fa-thumbs-up"> {{question.votes.length}} </i> </button>
+            <!-- <button class="btn-disable" @click="voteQuestion(question._id)"><i class="fas fa-thumbs-up"> {{question.votes.length}} </i> </button> -->
+            <button class="btn btn-danger" v-if="idUser == question.user._id" @click="del(question._id)">Delete</button>
           </div>
         </div>
         <hr>
@@ -15,7 +17,7 @@
           <p>{{question.text}}</p>
           <footer class="blockquote-footer">Question from <cite title="Source Title">{{question.user.name}}</cite></footer>
         </blockquote>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#answerModal">Answers</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#answerModal" @click="modalAnswer(question._id)">Answers</button>
         <!-- MODAL ANSWER -->
         <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="answerModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -31,7 +33,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" @click="postAnswer(question._id)">Post</button>
+                <button type="button" class="btn btn-primary" @click="postAnswer">Post</button>
               </div>
             </div>
           </div>
@@ -43,7 +45,8 @@
             {{answer.text}}
           </div>
           <div class="col-3">
-            {{answer.votes.length}} <i class="fas fa-thumbs-up"></i>
+            <button class="btn btn-success"><i class="fas fa-thumbs-up"> {{answer.votes.length}}</i></button>
+            <!-- <button class="btn btn-danger" v-if="idUser == answer.user" @click="delAnswer(answer.user)">Delete</button> -->
           </div>
         </div>
       </div>
@@ -59,6 +62,9 @@ export default {
   name: 'home',
   data () {
     return {
+      idUser: localStorage.getItem('id'),
+      emailUser: '',
+      id: '',
       answer: ''
     }
   },
@@ -72,15 +78,75 @@ export default {
     }
   },
   methods: {
-    postAnswer (_id) {
-      axios.post(`http://localhost:3000/answers/${_id}`, {text: this.answer}, {
+    modalAnswer (_id, email) {
+      this.id = _id
+      this.emailUser = email
+    },
+    postAnswer () {
+      axios.post(`http://localhost:3000/answers/${this.id}`, {text: this.answer}, {
         headers: {token: localStorage.getItem('token')}
       }).then(response => {
+        this.id = ''
         swal(
           'Success!',
           'Your answer has submitted',
           'success'
         ).then(() => location.reload())
+      })
+    },
+    vote (id) {
+      console.log('sebelum vote')
+      axios.put(`http://localhost:3000/questions/${id}/vote`, {
+        headers: {token: localStorage.getItem('token')}
+      }).then(response => {
+        console.log(response.data)
+      })
+      console.log('sesudah vote')
+    },
+    del (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'You will delete this question',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`http://localhost:3000/answers/${id}`).then(response => {
+            swal(
+              'Deleted!',
+              'Question is deleted',
+              'success'
+            ).then(() => {
+              location.reload()
+            })
+          })
+        }
+      })
+    },
+    delAnswer (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'You will delete this question',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Delete'
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`http://localhost:3000/questions/${id}`).then(response => {
+            swal(
+              'Deleted!',
+              'Question is deleted',
+              'success'
+            ).then(() => {
+              location.reload()
+            })
+          })
+        }
       })
     }
   }

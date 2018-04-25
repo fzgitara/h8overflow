@@ -50,8 +50,7 @@ module.exports = {
         message: 'Answer not found',
         error
       })
-    }
-    )
+    })
   },
   del (req, res) {
     Answer.remove({_id: req.params._id})
