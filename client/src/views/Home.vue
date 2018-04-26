@@ -83,7 +83,7 @@ export default {
       this.emailUser = email
     },
     postAnswer () {
-      axios.post(`http://localhost:3000/answers/${this.id}`, {text: this.answer}, {
+      axios.post(`http://server-h8.fachrizal.com/answers/${this.id}`, {text: this.answer}, {
         headers: {token: localStorage.getItem('token')}
       }).then(response => {
         this.id = ''
@@ -96,7 +96,7 @@ export default {
     },
     vote (id) {
       console.log('sebelum vote')
-      axios.put(`http://localhost:3000/questions/${id}/vote`, {
+      axios.put(`http://server-h8.fachrizal.com/questions/${id}/vote`, {
         headers: {token: localStorage.getItem('token')}
       }).then(response => {
         console.log(response.data)
@@ -114,7 +114,7 @@ export default {
         confirmButtonText: 'Delete'
       }).then((result) => {
         if (result.value) {
-          axios.delete(`http://localhost:3000/answers/${id}`).then(response => {
+          axios.delete(`http://server-h8.fachrizal.com/answers/${id}`).then(response => {
             swal(
               'Deleted!',
               'Question is deleted',
@@ -137,7 +137,7 @@ export default {
         confirmButtonText: 'Delete'
       }).then((result) => {
         if (result.value) {
-          axios.delete(`http://localhost:3000/questions/${id}`).then(response => {
+          axios.delete(`http://server-h8.fachrizal.com/questions/${id}`).then(response => {
             swal(
               'Deleted!',
               'Question is deleted',

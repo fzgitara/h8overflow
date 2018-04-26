@@ -20,17 +20,17 @@ export default new Vuex.Store({
   },
   actions: {
     getAllQuestions (context, payload) {
-      axios.get('http://localhost:3000/questions').then(response => {
+      axios.get('http://server-h8.fachrizal.com/questions').then(response => {
         context.commit('getAllQuestions', response.data.data)
       })
     },
     getAllAnswers (context, payload) {
-      axios.get('http://localhost:3000/answers').then(response => {
+      axios.get('http://server-h8.fachrizal.com/answers').then(response => {
         context.commit('getAllAnswers', response.data.data)
       })
     },
     register (context, payload) {
-      axios.post('http://localhost:3000/users/register', payload).then(response => {
+      axios.post('http://server-h8.fachrizal.com/users/register', payload).then(response => {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('id', response.data.user._id)
         swal(
@@ -41,7 +41,7 @@ export default new Vuex.Store({
       })
     },
     login (context, payload) {
-      axios.post('http://localhost:3000/users/login', payload).then(response => {
+      axios.post('http://server-h8.fachrizal.com/users/login', payload).then(response => {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('id', response.data.user._id)
         swal(
